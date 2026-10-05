@@ -1,7 +1,5 @@
 const GAS_URL_STORAGE_KEY = 'stream-calendar-gas-url';
 const WATCHED_STORAGE_KEY = 'stream-calendar-watched-video-ids';
-const AUTH_STORAGE_KEY = 'stream-calendar-authenticated';
-const AUTH_PASSWORD = 'demo2026';
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbySEee02uqMKRC0sfKjmFkTZCTPSd6J2snnCTJceBnvCTvENgtG5kHkmeqlBLOWePc/exec';
 const CONTENT_MODES = {
   STREAM: 'stream',
@@ -124,7 +122,7 @@ const sampleEvents = [
 ];
 
 let appStarted = false;
-setupAuthGate();
+init();
 
 function init() {
   if (appStarted) return;
@@ -132,36 +130,6 @@ function init() {
   updateHeaderHeight();
   bindEvents();
   loadEvents();
-}
-
-function setupAuthGate() {
-  const form = document.querySelector('#authForm');
-  const input = document.querySelector('#authPassword');
-  const error = document.querySelector('#authError');
-
-  if (sessionStorage.getItem(AUTH_STORAGE_KEY) === 'true') {
-    unlockApp();
-    return;
-  }
-
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (input.value === AUTH_PASSWORD) {
-      sessionStorage.setItem(AUTH_STORAGE_KEY, 'true');
-      unlockApp();
-      return;
-    }
-
-    error.textContent = 'パスワードが違います';
-    input.select();
-  });
-
-  requestAnimationFrame(() => input.focus());
-}
-
-function unlockApp() {
-  document.body.classList.remove('auth-locked');
-  init();
 }
 
 function bindEvents() {
